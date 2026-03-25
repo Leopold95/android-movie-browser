@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">MovieBrowser</string>
+    <string name="header_home">Головна</string>
+    <string name="header_details">Інформація</string>
+    <string name="header_favourites">Улюблені</string>
+
+    <string name="shared_image_loading_error">Помилка</string>
+
+    <!--home-->
+    <string name="feature_home_loading_error">Помилка завантаження фільмів. Спробуйте пізніше</string>
+    <string name="feature_home_no_movies">Фільмів не знайдено</string>
+
+    <!--details-->
+    <string name="feature_details_loading_error">Помилка. Спробуйте пізніше</string>
+    <string name="feature_details_description">Опис</string>
+    <string name="feature_details_duration_minutes">%1$d хв</string>
+
+    <!--favourites-->
+    <string name="feature_favourites_empty">У вас поки немає улюблених фільмів</string>
+</resources>
