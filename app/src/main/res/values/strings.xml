@@ -5,6 +5,10 @@
     <string name="header_favourites">Улюблені</string>
 
     <string name="shared_image_loading_error">Помилка</string>
+    <string name="shared_loading">Завантаження…</string>
+    <string name="cd_navigate_back">Назад</string>
+    <string name="cd_favourite_toggle">Додати або прибрати з улюблених</string>
+    <string name="cd_remove_from_favourites">видалити з улюблених</string>
 
     <!--home-->
     <string name="feature_home_loading_error">Помилка завантаження фільмів. Спробуйте пізніше</string>
@@ -14,6 +18,8 @@
     <string name="feature_details_loading_error">Помилка. Спробуйте пізніше</string>
     <string name="feature_details_description">Опис</string>
     <string name="feature_details_duration_minutes">%1$d хв</string>
+    <string name="feature_details_add_favourite">Улюблене</string>
+    <string name="feature_details_remove_favourite">В улюблених</string>
 
     <!--favourites-->
     <string name="feature_favourites_empty">У вас поки немає улюблених фільмів</string>

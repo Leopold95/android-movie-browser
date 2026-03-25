@@ -20,7 +20,7 @@ import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
@@ -57,7 +57,8 @@ fun DetailsView(movieId: Long) {
         return
     }
 
-    if (state.movie == null){
+    val movie = state.movie
+    if (movie == null){
         CenteredTextComponent(stringResource(R.string.feature_details_loading_error))
         return
     }
@@ -71,29 +72,36 @@ fun DetailsView(movieId: Long) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(400.dp),
+                .height(360.dp)
+                .padding(horizontal = 12.dp),
             shape = MaterialTheme.shapes.large,
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             Box {
                 AsyncImage(
-                    model = state.movie!!.imagePath,
-                    contentDescription = state.movie!!.title,
+                    model = movie.imagePath,
+                    contentDescription = movie.title,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
 
-                FloatingActionButton(
+                FilledTonalButton(
                     onClick = viewModel::favouriteClicked,
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(16.dp),
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                    shape = MaterialTheme.shapes.medium
                 ) {
                     Icon(
                         imageVector = if (state.isFavourite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
-                        contentDescription = null,
-                        tint = if (state.isFavourite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onPrimaryContainer
+                        contentDescription = "toggle favourite",
+                        tint = if (state.isFavourite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                    Spacer(modifier = Modifier.size(8.dp))
+                    Text(
+                        text = if (state.isFavourite) "В улюблених" else "Улюблене",
+                        style = MaterialTheme.typography.labelLarge
                     )
                 }
             }
@@ -105,7 +113,7 @@ fun DetailsView(movieId: Long) {
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             Text(
-                text = state.movie!!.title,
+                text = movie.title,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -128,7 +136,7 @@ fun DetailsView(movieId: Long) {
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text =  state.movie!!.rating.toString(),
+                        text = movie.rating.toString(),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -141,7 +149,7 @@ fun DetailsView(movieId: Long) {
                 )
 
                 Text(
-                    text = state.movie!!.releaseYear,
+                    text = movie.releaseYear,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -153,7 +161,7 @@ fun DetailsView(movieId: Long) {
                 )
 
                 Text(
-                    text = "${state.movie!!.duration} min",
+                    text = stringResource(R.string.feature_details_duration_minutes, movie.duration),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -165,7 +173,7 @@ fun DetailsView(movieId: Long) {
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                state.movie!!.geners.forEach { genre ->
+                movie.geners.take(3).forEach { genre ->
                     SuggestionChip(
                         onClick = { },
                         label = {
@@ -190,7 +198,7 @@ fun DetailsView(movieId: Long) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = state.movie!!.description,
+                text = movie.description,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = MaterialTheme.typography.bodyLarge.lineHeight.times(1.5f)

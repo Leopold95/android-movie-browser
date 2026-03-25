@@ -19,6 +19,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,10 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.leopold95.moviebrowser.R
 import com.leopold95.moviebrowser.shared.models.ShortMovieModel
 
 @Composable
@@ -46,7 +49,8 @@ fun FavouriteItem(
             .padding(vertical = 6.dp)
             .clickable { onMovieClick(movie.id) },
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -97,13 +101,20 @@ fun FavouriteItem(
             Text(
                 text = movie.name,
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
 
-            IconButton(onClick = { onRemoveClick(movie.id) }) {
+            IconButton(
+                onClick = { onRemoveClick(movie.id) },
+                colors = IconButtonDefaults.filledTonalIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                )
+            ) {
                 Icon(
                     imageVector = Icons.Outlined.Delete,
-                    contentDescription = null
+                    contentDescription = "${movie.name} ${stringResource(R.string.cd_remove_from_favourites)}"
                 )
             }
         }

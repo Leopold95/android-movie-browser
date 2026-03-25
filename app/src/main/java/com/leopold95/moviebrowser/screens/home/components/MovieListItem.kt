@@ -15,24 +15,27 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.leopold95.moviebrowser.R
 import com.leopold95.moviebrowser.shared.models.ShortMovieModel
 
@@ -46,19 +49,23 @@ internal fun MovieListItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 10.dp, top = 10.dp)
+            .padding(vertical = 8.dp)
             .clickable{
                 onDetailsClicked(model.id)
             },
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
         ) {
             SubcomposeAsyncImage(
-                model = model.imageUrl,
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(model.imageUrl)
+                    .crossfade(true)
+                    .build(),
                 contentDescription = model.name,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -69,11 +76,12 @@ internal fun MovieListItem(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Color.LightGray),
+                            .background(MaterialTheme.colorScheme.surfaceVariant),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator(
-                            modifier = Modifier.size(40.dp),
+                            modifier = Modifier.size(28.dp),
+                            strokeWidth = 2.dp,
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -82,13 +90,13 @@ internal fun MovieListItem(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Color.LightGray),
+                            .background(MaterialTheme.colorScheme.surfaceVariant),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = stringResource(R.string.shared_image_loading_error),
-                            color = Color.DarkGray,
-                            style = MaterialTheme.typography.bodySmall
+                        Icon(
+                            imageVector = Icons.Outlined.Image,
+                            contentDescription = stringResource(R.string.shared_image_loading_error),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -103,19 +111,30 @@ internal fun MovieListItem(
             ) {
                 Text(
                     text = model.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f)
                 )
 
                 IconButton(
                     onClick = { onFavouriteClick(model) },
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.size(36.dp),
+                    colors = IconButtonDefaults.filledTonalIconButtonColors(
+                        containerColor = if (isFavourite) {
+                            MaterialTheme.colorScheme.secondaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.surfaceVariant
+                        },
+                        contentColor = if (isFavourite) {
+                            MaterialTheme.colorScheme.onSecondaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        }
+                    )
                 ) {
                     Icon(
                         imageVector = if (isFavourite) Icons.Filled.Star else Icons.Outlined.Star,
-                        contentDescription = null,
-                        tint = if (isFavourite) Color.Yellow else Color.Gray,
+                        contentDescription = "toggle favourite",
                     )
                 }
             }
@@ -125,9 +144,8 @@ internal fun MovieListItem(
             Text(
                 text = model.description,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
-                fontSize = 14.sp,
-                maxLines = 2
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 3
             )
         }
     }

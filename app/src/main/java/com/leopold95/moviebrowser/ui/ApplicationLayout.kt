@@ -5,22 +5,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
@@ -47,7 +50,7 @@ fun ApplicationLayout(){
     val list = remember {
         listOf(
             NavigationItem(headerHome, Icons.Rounded.Home, ApplicationScreen.Home),
-            NavigationItem(headerFavourites, Icons.Rounded.FavoriteBorder, ApplicationScreen.Favourites),
+            NavigationItem(headerFavourites, Icons.Rounded.Favorite, ApplicationScreen.Favourites),
         )
     }
 
@@ -64,34 +67,43 @@ fun ApplicationLayout(){
     }
 
     val isDetailsScreen = currentDestination?.hasRoute(ApplicationScreen.Details::class) == true
+    val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 6.dp, end = 6.dp),
+            .fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.surface,
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
-                    Text(header)
+                    Text(text = header, style = MaterialTheme.typography.titleLarge)
                 },
                 navigationIcon = {
                     if (isDetailsScreen) {
                         IconButton(onClick = { navController.navigateUp() }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                                contentDescription = "Back"
+                                contentDescription = stringResource(R.string.cd_navigate_back)
                             )
                         }
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
+                ),
+                scrollBehavior = topAppBarScrollBehavior
             )
         },
         bottomBar = {
             if (!isDetailsScreen) {
-                NavigationBar {
+                NavigationBar(
+                    containerColor = NavigationBarDefaults.containerColor
+                ) {
                     list.forEach { item ->
+                        val selected = currentDestination?.hasRoute(item.screen::class) == true
                         NavigationBarItem(
-                            selected = currentDestination?.hasRoute(item.screen::class) == true,
+                            selected = selected,
                             onClick = {
                                 navController.navigate(item.screen) {
                                     popUpTo(navController.graph.findStartDestination().id) {
@@ -102,7 +114,20 @@ fun ApplicationLayout(){
                                 }
                             },
                             label = { Text(item.label) },
-                            icon = { Icon(item.icon, contentDescription = null) }
+                            icon = {
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription = item.label
+                                )
+                            },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                selectedTextColor = MaterialTheme.colorScheme.onSurface,
+                                indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
+                                unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            ),
+                            alwaysShowLabel = selected
                         )
                     }
                 }
