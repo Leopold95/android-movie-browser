@@ -12,21 +12,6 @@ Android-приложение для просмотра популярных фи
 - Отдельный экран избранного с удалением и переходом в детали
 - Персистентность избранного через `DataStore`
 
-## Соответствие ТЗ
-
-- Список фильмов: `app/src/main/java/com/leopold95/moviebrowser/features/home/presentation/HomeView.kt`
-- Детали фильма: `app/src/main/java/com/leopold95/moviebrowser/features/details/presentation/DetailsView.kt`
-- Избранное: `app/src/main/java/com/leopold95/moviebrowser/features/favourites/presentation/FavouritesView.kt`
-- API-слой и маппинг: `app/src/main/java/com/leopold95/moviebrowser/shared/services/MovieService.kt`
-
-## Ключевые улучшения
-
-- Исправлено отображение года релиза: из `yyyy-MM-dd` выделяется только год
-- Состояние избранного синхронизировано через `favoritesFlow`, без локального рассинхрона в UI
-- Улучшена навигация между вкладками (`saveState`/`restoreState`) и UX деталей (скрытие bottom bar)
-- Добавлены пустые состояния и улучшены пользовательские тексты
-- Убраны блокирующие операции в `Application.onCreate`
-
 ## Архитектура
 
 Проект организован по feature-first с разделением на UI и сервисный слой:
