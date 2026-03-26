@@ -14,14 +14,6 @@ Android-приложение для просмотра популярных фи
 
 ## Архитектура
 
-Проект организован по feature-first с разделением на UI и сервисный слой:
-
-- `features/*/presentation` - Compose-экраны и ViewModel
-- `shared/services` - интеграция с API и локальное хранилище
-- `shared/abstraction` - интерфейсы сервисов
-- `shared/modules` - DI-модули Hilt
-- `ui` - root layout и навигация
-
 Технологии:
 
 - Kotlin, Jetpack Compose, Material 3
@@ -43,23 +35,3 @@ Android-приложение для просмотра популярных фи
 - `TMDB_API_KEY`
 - `TMB_API_URL`
 - `TMB_API_IMAGES`
-
-## Запуск
-
-```bat
-gradlew.bat :app:assembleDebug
-```
-
-## Тесты
-
-Локальные unit-тесты:
-
-- `app/src/test/java/com/leopold95/moviebrowser/shared/ReleaseDateFormatterTest.kt`
-- `app/src/test/java/com/leopold95/moviebrowser/features/home/presentation/viewmodels/HomeViewModelTest.kt`
-- `app/src/test/java/com/leopold95/moviebrowser/features/details/presentation/viewmodels/DetailsViewModelTest.kt`
-
-Запуск:
-
-```bat
-gradlew.bat :app:testDebugUnitTest
-```
