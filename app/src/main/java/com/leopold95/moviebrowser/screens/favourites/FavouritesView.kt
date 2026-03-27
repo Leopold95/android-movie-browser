@@ -6,12 +6,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.leopold95.moviebrowser.R
 import com.leopold95.moviebrowser.screens.favourites.components.FavouriteItem
@@ -22,7 +22,7 @@ import com.leopold95.moviebrowser.ui.components.CenteredTextComponent
 @Composable
 fun FavouritesView(nav: NavHostController){
     val viewModel: FavouritesViewModel = hiltViewModel()
-    val favorites by viewModel.favorites.collectAsStateWithLifecycle()
+    val favorites by viewModel.favourites.collectAsState(emptyList())
 
     if (favorites.isEmpty()) {
         CenteredTextComponent(stringResource(R.string.feature_favourites_empty))

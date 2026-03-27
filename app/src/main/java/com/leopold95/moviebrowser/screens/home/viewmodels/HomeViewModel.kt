@@ -8,7 +8,12 @@ import com.leopold95.moviebrowser.shared.abstraction.IMovieService
 import com.leopold95.moviebrowser.shared.models.ShortMovieModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,25 +26,20 @@ class HomeViewModel @Inject constructor(
     private val _state = MutableStateFlow(HomeUiState())
     val state = _state.asStateFlow()
 
-    private val _favouriteIds = MutableStateFlow<Set<Long>>(emptySet())
-    val favouriteIds = _favouriteIds.asStateFlow()
+    val favouriteIds: StateFlow<Set<Long>> = favouriteService.favouritesFlow
+        .map { list -> list.map { it.id }.toSet() }
+        .distinctUntilChanged()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptySet())
 
     init {
         viewModelScope.launch { loadMovies() }
-        viewModelScope.launch { observeFavourites() }
     }
 
     fun onFavouriteClicked(model: ShortMovieModel) = viewModelScope.launch {
-        if (favouriteService.exists(model.id)) {
+        if (model.id in favouriteIds.value) {
             favouriteService.remove(model.id)
         } else {
             favouriteService.add(model)
-        }
-    }
-
-    private suspend fun observeFavourites() {
-        favouriteService.favoritesFlow.collect { list ->
-            _favouriteIds.value = list.map { it.id }.toSet()
         }
     }
 
